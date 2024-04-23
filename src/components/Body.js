@@ -12,57 +12,78 @@ import {
   TextField,
   Card,
 } from "@mui/material";
-import data from "./data.json";
+import data from "./data.json"; // Ensure data is imported correctly.
 
 const Body = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
-  const [selectedDivision, setSelectedDivision] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedNeighborhood, setSelectedNeighborhood] = useState("");
+  const [selectedSubDistrict, setSelectedSubDistrict] = useState("");
+  const [selectedVillage, setSelectedVillage] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
+  // Function to handle changes in country selection
   const handleCountryChange = (event) => {
-    setSelectedCountry(event.target.value);
+    const newCountry = event.target.value;
+    setSelectedCountry(newCountry);
     setSelectedState("");
-    setSelectedDivision("");
     setSelectedDistrict("");
-    setSelectedNeighborhood("");
+    setSelectedSubDistrict("");
+    setSelectedVillage("");
   };
 
+  // Function to handle changes in state selection
   const handleStateChange = (event) => {
-    setSelectedState(event.target.value);
-    setSelectedDivision("");
+    const newState = event.target.value;
+    setSelectedState(newState);
     setSelectedDistrict("");
-    setSelectedNeighborhood("");
+    setSelectedSubDistrict("");
+    setSelectedVillage("");
   };
 
-  const handleDivisionChange = (event) => {
-    setSelectedDivision(event.target.value);
-    setSelectedDistrict("");
-    setSelectedNeighborhood("");
-  };
-
+  // Function to handle changes in district selection
   const handleDistrictChange = (event) => {
-    setSelectedDistrict(event.target.value);
-    setSelectedNeighborhood("");
+    const newDistrict = event.target.value;
+    setSelectedDistrict(newDistrict);
+    setSelectedSubDistrict("");
+    setSelectedVillage("");
   };
 
-  const handleNeighborhoodSelection = (event) => {
-    setSelectedNeighborhood(event.target.value);
+  // Function to handle changes in sub-district selection
+  const handleSubDistrictChange = (event) => {
+    const newSubDistrict = event.target.value;
+    setSelectedSubDistrict(newSubDistrict);
+    setSelectedVillage("");
   };
 
-  const isFormFilled =
-    name &&
-    email &&
-    phone &&
-    selectedCountry &&
-    selectedState &&
-    selectedDivision &&
-    selectedDistrict &&
-    selectedNeighborhood;
+  // Function to handle changes in village selection
+  const handleVillageChange = (event) => {
+    setSelectedVillage(event.target.value);
+  };
+
+  // Filters for dropdowns calculated on-the-fly
+  const filteredStates = selectedCountry
+    ? data
+        .filter((item) => item.Country === selectedCountry)
+        .map((item) => item.State)
+    : [];
+  const filteredDistricts = selectedState
+    ? data
+        .filter((item) => item.State === selectedState)
+        .map((item) => item.District)
+    : [];
+  const filteredSubDistricts = selectedDistrict
+    ? data
+        .filter((item) => item.District === selectedDistrict)
+        .map((item) => item["Sub District"])
+    : [];
+  const filteredVillages = selectedSubDistrict
+    ? data
+        .filter((item) => item["Sub District"] === selectedSubDistrict)
+        .map((item) => item.Village)
+    : [];
 
   return (
     <Box sx={{ flexGrow: 1, position: "relative" }}>
@@ -84,27 +105,21 @@ const Body = () => {
               label="Name"
               placeholder="Enter your name"
               value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
+              onChange={(e) => setName(e.target.value)}
               fullWidth
             />
             <TextField
               label="Email"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              onChange={(e) => setEmail(e.target.value)}
               fullWidth
             />
             <TextField
               label="Phone"
               placeholder="Enter your phone no"
               value={phone}
-              onChange={(e) => {
-                setPhone(e.target.value);
-              }}
+              onChange={(e) => setPhone(e.target.value)}
               fullWidth
             />
           </Stack>
@@ -119,105 +134,85 @@ const Body = () => {
                 onChange={handleCountryChange}
                 label="Country"
               >
-                {data.locations.map((location) => (
-                  <MenuItem key={location.country} value={location.country}>
-                    {location.country}
+                {Array.from(new Set(data.map((item) => item.Country))).map(
+                  (country) => (
+                    <MenuItem key={country} value={country}>
+                      {country}
+                    </MenuItem>
+                  )
+                )}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth sx={{ my: 2 }}>
+              <InputLabel>State</InputLabel>
+              <Select
+                value={selectedState}
+                onChange={handleStateChange}
+                label="State"
+              >
+                {Array.from(new Set(filteredStates)).map((state) => (
+                  <MenuItem key={state} value={state}>
+                    {state}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-            {selectedCountry && (
-              <>
-                <FormControl fullWidth sx={{ my: 2 }}>
-                  <InputLabel>State</InputLabel>
-                  <Select
-                    value={selectedState}
-                    onChange={handleStateChange}
-                    label="State"
-                  >
-                    {data.locations
-                      .find((loc) => loc.country === selectedCountry)
-                      ?.states.map((state) => (
-                        <MenuItem key={state.name} value={state.name}>
-                          {state.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-                <FormControl fullWidth sx={{ my: 2 }}>
-                  <InputLabel>Division</InputLabel>
-                  <Select
-                    value={selectedDivision}
-                    onChange={handleDivisionChange}
-                    label="Division"
-                  >
-                    {data.locations
-                      .find((loc) => loc.country === selectedCountry)
-                      ?.states.find((st) => st.name === selectedState)
-                      ?.divisions.map((division) => (
-                        <MenuItem key={division.name} value={division.name}>
-                          {division.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-                <FormControl fullWidth sx={{ my: 2 }}>
-                  <InputLabel>District</InputLabel>
-                  <Select
-                    value={selectedDistrict}
-                    onChange={handleDistrictChange}
-                    label="District"
-                  >
-                    {data.locations
-                      .find((loc) => loc.country === selectedCountry)
-                      ?.states.find((st) => st.name === selectedState)
-                      ?.divisions.find((div) => div.name === selectedDivision)
-                      ?.districts.map((district) => (
-                        <MenuItem key={district.name} value={district.name}>
-                          {district.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-                <FormControl fullWidth sx={{ my: 2 }}>
-                  <InputLabel>Neighborhood</InputLabel>
-                  <Select
-                    value={selectedNeighborhood}
-                    onChange={handleNeighborhoodSelection}
-                    label="Neighborhood"
-                  >
-                    {data.locations
-                      .find((loc) => loc.country === selectedCountry)
-                      ?.states.find((st) => st.name === selectedState)
-                      ?.divisions.find((div) => div.name === selectedDivision)
-                      ?.districts.find((dist) => dist.name === selectedDistrict)
-                      ?.neighborhoods.map((neighborhood) => (
-                        <MenuItem
-                          key={neighborhood.name}
-                          value={neighborhood.name}
-                        >
-                          {neighborhood.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-              </>
-            )}
+            <FormControl fullWidth sx={{ my: 2 }}>
+              <InputLabel>District</InputLabel>
+              <Select
+                value={selectedDistrict}
+                onChange={handleDistrictChange}
+                label="District"
+              >
+                {Array.from(new Set(filteredDistricts)).map((district) => (
+                  <MenuItem key={district} value={district}>
+                    {district}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth sx={{ my: 2 }}>
+              <InputLabel>Sub-District</InputLabel>
+              <Select
+                value={selectedSubDistrict}
+                onChange={handleSubDistrictChange}
+                label="Sub-District"
+              >
+                {Array.from(new Set(filteredSubDistricts)).map(
+                  (subDistrict) => (
+                    <MenuItem key={subDistrict} value={subDistrict}>
+                      {subDistrict}
+                    </MenuItem>
+                  )
+                )}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth sx={{ my: 2 }}>
+              <InputLabel>Village</InputLabel>
+              <Select
+                value={selectedVillage}
+                onChange={handleVillageChange}
+                label="Village"
+              >
+                {Array.from(new Set(filteredVillages)).map((village) => (
+                  <MenuItem key={village} value={village}>
+                    {village}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Stack>
-
           <Stack spacing={2} sx={{ width: "30%" }}>
             <Typography variant="h6">Selected Details</Typography>
-            {isFormFilled && (
-              <Card sx={{ p: 2 }}>
-                <Typography variant="body1">Name: {name}</Typography>
-                <Typography variant="body1">Email: {email}</Typography>
-                <Typography variant="body1">Phone: {phone}</Typography>
-                <Typography variant="body1">
-                  Address: {selectedNeighborhood}, {selectedDistrict},{" "}
-                  {selectedDivision}, {selectedState}, {selectedCountry}
-                </Typography>
-              </Card>
-            )}
+            <Card sx={{ p: 2 }}>
+              <Typography variant="body1">Name: {name}</Typography>
+              <Typography variant="body1">Email: {email}</Typography>
+              <Typography variant="body1">Phone: {phone}</Typography>
+              <Typography variant="body1">
+                Address: {selectedVillage}, {selectedSubDistrict},{" "}
+                {selectedDistrict}, {selectedState}, {selectedCountry}
+              </Typography>
+            </Card>
           </Stack>
         </Stack>
       </Box>
