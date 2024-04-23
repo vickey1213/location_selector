@@ -15,8 +15,8 @@ Follow these steps to install the project:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/your-project-name.git
-   cd your-project-name
+   git clone https://github.com/vickey1213/location_selector.git
+   cd location_selector
 
 ## Install dependenciesInside the project directory, run:
 
