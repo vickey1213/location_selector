@@ -1,0 +1,79 @@
+{
+  "locations": [
+    {
+      "country": "United States",
+      "states": [
+        {
+          "name": "California",
+          "divisions": [
+            {
+              "name": "Northern California",
+              "districts": [
+                {
+                  "name": "San Francisco",
+                  "neighborhoods": [
+                    {
+                      "name": "Downtown",
+                      "roads": [
+                        {
+                          "name": "Market St",
+                          "properties": [
+                            {
+                              "name": "Luxury Apartment near Union Square",
+                              "address": "123 Market St",
+                              "amenities": ["WiFi", "Air Conditioning", "Gym"]
+                            },
+                            {
+                              "name": "Cozy Studio in Financial District",
+                              "address": "456 Market St",
+                              "amenities": ["WiFi", "Kitchenette", "Laundry"]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "France",
+      "states": [
+        {
+          "name": "Île-de-France",
+          "divisions": [
+            {
+              "name": "Paris Metropolitan Area",
+              "districts": [
+                {
+                  "name": "Paris",
+                  "neighborhoods": [
+                    {
+                      "name": "Le Marais",
+                      "roads": [
+                        {
+                          "name": "Rue du Temple",
+                          "properties": [
+                            {
+                              "name": "Stylish Studio near Centre Pompidou",
+                              "address": "1 Rue du Temple",
+                              "amenities": ["WiFi", "Kitchenette", "Laundry"]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
